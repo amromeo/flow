@@ -29,8 +29,23 @@ for(i in 1:10){
 ?readFCSheader
 
 -------------------------
+library(purrr)
 files<-dir(path='D:')  
-  #Generating FCS files from fso files
+fso<-readBin(readfile,what="raw",2000)
+#replace all 'null' values with a space
+fso[fso==00]<-as.raw(32)
+#convert to characters
+fsonew<-rawToChar(fso)
+match<-regmatches(fsonew, regexpr('Sysmex_RET%/.+Sysmex_RET', fsonew,perl=T))
+ret<-substr(match,13,17)
+grepl("     ",ret)
+match<-regmatches(fsonew, regexpr('SMNO/.+/*SYS', fsonew,perl=T))
+barcode<-substr(match,6,16)
+
+
+#Generating FCS files from fso files
+
+
 
 fso<-readBin(readfile,what="raw",100000000)
 #replace all 'null' values with a space
